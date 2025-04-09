@@ -1,0 +1,104 @@
+import re, requests, json
+
+dataContained ={}
+
+def extractfromregularexpresionAccess(AccessRegex, *filesAccess):
+    Accessresults = []
+    for Accessfile in filesAccess:
+        if Accessfile:
+            content = Accessfile.read()
+            Accessmatches = re.findall(AccessRegex, content)
+            Accessresults.extend(Accessmatches)
+    return Accessresults
+  
+AccessData1 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/access_log", "r")
+AccessData2 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/access_log.1", "r")
+AccessData3 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/access_log.2", "r")
+AccessData4 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/access_log.3", "r")
+AccessData5 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/access_log.4", "r")
+AccessData6 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/access_log.5", "r")
+AccessData7 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/access_log.6", "r")
+AccessRegex = r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s-\s-\s\[(\d{2}\/\b[a-zA-Z]{3}\b\/\d{4}.*?\d{2}\:\d{2}\:\d{2}).*?(\b[A-Z]{3}.*?)(\d{3})"
+
+
+resultadoAccess = extractfromregularexpresionAccess(AccessRegex, AccessData1, AccessData2, AccessData3, AccessData4, AccessData5, AccessData6, AccessData7)
+for ip, fecha, error, errorcode in resultadoAccess:
+  
+  if ip not in dataContained:
+      dataContained[ip] =[]
+  if (fecha, error, errorcode) not in dataContained[ip]:
+      dataContained[ip].append((fecha, error, errorcode))
+      
+      
+def extractfromregularexpresionError(ErrorRegex, *filesError):
+    Errorresults = []
+    for Errorfile in filesError:
+        if Errorfile:
+            Errorcontent = Errorfile.read()
+            Errormatches = re.findall(ErrorRegex, Errorcontent)
+            Errorresults.extend(Errormatches)
+    return Errorresults
+
+ErrorData1 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/error_log", "r")
+ErrorData2 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/error_log.1", "r")
+ErrorData3 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/error_log.2", "r")
+ErrorData4 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/error_log.3", "r")
+ErrorData5 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/error_log.4", "r")
+ErrorData6 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/error_log.5", "r")
+ErrorData7 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/error_log.6", "r")
+ErrorRegex = r"(\b[a-zA-Z]{3}\s\b[a-zA-Z]{3}.*?\d{4}).*?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}).*?\s(.*)"
+
+resultadoError = extractfromregularexpresionError(ErrorRegex, ErrorData1, ErrorData2, ErrorData3, ErrorData4, ErrorData5, ErrorData6, ErrorData7)
+
+for fecha, ip, error in resultadoError:
+  if ip not in dataContained:
+      dataContained[ip] =[]
+  if (fecha, error, None) not in dataContained[ip]:
+      dataContained[ip].append((fecha, error, None))
+      
+def extractfromregularexpresionSSL(SSLRegex, *filesSSL):
+    SSLresults = []
+    for SSLfile in filesSSL:
+        if SSLfile:
+            SSLcontent = SSLfile.read()
+            SSLmatches = re.findall(SSLRegex, SSLcontent)
+            SSLresults.extend(SSLmatches)
+    return SSLresults
+  
+SSLData1 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/ssl_error_log", "r")
+SSLData2 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/ssl_error_log.1", "r")
+SSLData3 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/ssl_error_log.2", "r")
+SSLData4 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/ssl_error_log.3", "r")
+SSLData5 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/ssl_error_log.4", "r")
+SSLData6 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/ssl_error_log.5", "r")
+SSLData7 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/ssl_error_log.6", "r")
+SSLRegex = r"(\b[a-zA-Z]{3}\s\b[a-zA-Z]{3}.*?\d{4}).*?\b[A-Za-z]{3,5}.*?\s(.*?\b[A-Za-z]{7,9}.*?\b[A-Za-z]{5,11})|.*?\,.*?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
+
+
+resultadoSSL = extractfromregularexpresionSSL(SSLRegex, SSLData1, SSLData2, SSLData3, SSLData4, SSLData5, SSLData6, SSLData7)
+
+ssl_code = "SSL_LOG"
+
+if ssl_code not in dataContained:
+      dataContained[ssl_code] =[]
+
+if ip not in dataContained:
+      dataContained[ip] =[]
+
+
+      
+for fecha, error, ip in resultadoSSL:     
+  if (fecha, error) not in dataContained[ssl_code]:
+      dataContained[ssl_code].append((fecha, error, None))     
+      
+for ip, eventos in dataContained.items():
+  print(f"\n IP: {ip}")
+  for fecha, error, errorcode in eventos:
+    print(f"Fecha y hora: {fecha} // Error: {error} // Codigo: {errorcode}")
+    if errorcode == "400" or errorcode == "405" or errorcode == "414" or errorcode == "429":
+        print(f"[ACTIVIDAD SOSPECHOSA]")
+        Location = requests.get(f"https://ipinfo.io/{ip}/json").json()
+        print(f"La IP {ip} de {Location.get('country', 'desconocido')}, {Location.get('city', 'desconocida')} presento el codigo de error {errorcode} \n")
+    else:
+        continue
+    
