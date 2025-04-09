@@ -82,12 +82,9 @@ ssl_code = "SSL_LOG"
 if ssl_code not in dataContained:
       dataContained[ssl_code] =[]
 
-if ip not in dataContained:
-      dataContained[ip] =[]
-
 
       
-for fecha, error, ip in resultadoSSL:     
+for fecha, error in resultadoSSL:     
   if (fecha, error) not in dataContained[ssl_code]:
       dataContained[ssl_code].append((fecha, error, None))     
       
@@ -95,10 +92,11 @@ for ip, eventos in dataContained.items():
   print(f"\n IP: {ip}")
   for fecha, error, errorcode in eventos:
     print(f"Fecha y hora: {fecha} // Error: {error} // Codigo: {errorcode}")
-    if errorcode == "400" or errorcode == "405" or errorcode == "414" or errorcode == "429":
+    if errorcode == "400" or errorcode == "405" or errorcode == "414" or errorcode == "429" or error == "SSL handshake failed":
         print(f"[ACTIVIDAD SOSPECHOSA]")
         Location = requests.get(f"https://ipinfo.io/{ip}/json").json()
         print(f"La IP {ip} de {Location.get('country', 'desconocido')}, {Location.get('city', 'desconocida')} presento el codigo de error {errorcode} \n")
     else:
         continue
+    
     
