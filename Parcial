@@ -72,7 +72,7 @@ SSLData4 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/ssl
 SSLData5 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/ssl_error_log.4", "r")
 SSLData6 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/ssl_error_log.5", "r")
 SSLData7 = open("C:/Users/306/Downloads/SecurityPythonDevelopers/SotM34/http/ssl_error_log.6", "r")
-SSLRegex = r"(\b[a-zA-Z]{3}\s\b[a-zA-Z]{3}.*?\d{4}).*?\b[A-Za-z]{3,5}.*?\s(.*?\b[A-Za-z]{7,9}.*?\b[A-Za-z]{5,11})|.*?\,.*?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
+SSLRegex = r"(\b[a-zA-Z]{3}\s\b[a-zA-Z]{3}.*?\d{4}).*?\b[A-Za-z]{3,5}.*?\s(.*?\b[A-Za-z]{7,9}.*?\b[A-Za-z]{5,11})"
 
 
 resultadoSSL = extractfromregularexpresionSSL(SSLRegex, SSLData1, SSLData2, SSLData3, SSLData4, SSLData5, SSLData6, SSLData7)
